@@ -18,10 +18,10 @@ export function Ground({ displacementScale = 5, displacementOffset = 0 }) {
     }
 
     const geo = new PlaneGeometry(w, h, w - 1, h - 1);
-    const f = chunk(heights, w).reverse().flat();
+    // const f = chunk(heights, w).reverse().flat();
     const vertices = geo.attributes.position.array;
-    for (var i = 0; i < vertices.length; i++) {
-      vertices[i * 3 + 2] = f[i];
+    for (var j = 0; j < vertices.length; j++) {
+      vertices[j * 3 + 2] = heights[j];
     }
     return geo;
   }, [displacementOffset, displacementScale, texture]);
@@ -48,14 +48,14 @@ export function Ground({ displacementScale = 5, displacementOffset = 0 }) {
 }
 
 // used to correct differing ordering between collider and mesh
-function chunk(arr, size) {
-  return arr.reduce(
-    (accumulator, currentValue, i) => (
-      i % size
-        ? accumulator[accumulator.length - 1].push(currentValue)
-        : accumulator.push([currentValue]),
-      accumulator
-    ),
-    [],
-  );
-}
+// function chunk(arr, size) {
+//   return arr.reduce(
+//     (accumulator, currentValue, i) => (
+//       i % size
+//         ? accumulator[accumulator.length - 1].push(currentValue)
+//         : accumulator.push([currentValue]),
+//       accumulator
+//     ),
+//     [],
+//   );
+// }
