@@ -3,6 +3,7 @@ import Lights from "./Lights";
 import { Physics } from "@react-three/rapier";
 import { Ground } from "./Ground";
 import Ball from "./Ball";
+import Plane from "./Plane";
 
 export default function World() {
   return (
@@ -10,7 +11,7 @@ export default function World() {
       <OrbitControls makeDefault />
       <axesHelper args={[2]} />
       {/* <color attach="background" args={["#000000"]} /> */}
-      <Environment preset="dawn" />
+      <Environment preset="city" />
       <Physics debug>
         <Lights />
         <Ball />

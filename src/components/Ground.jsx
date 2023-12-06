@@ -1,12 +1,11 @@
 import { useTexture } from "@react-three/drei";
-import { RigidBody, useRapier, HeightfieldCollider } from "@react-three/rapier";
+import { RigidBody } from "@react-three/rapier";
 import { useMemo } from "react";
 import getPixels from "get-image-pixels";
 import { PlaneGeometry } from "three";
 
 export function Ground({ displacementScale = 5, displacementOffset = 0 }) {
   const texture = useTexture("./Heightmap.png");
-  const { rapier, world } = useRapier();
 
   var pixels = getPixels(texture.image);
   const heights = [];
@@ -17,19 +16,6 @@ export function Ground({ displacementScale = 5, displacementOffset = 0 }) {
     for (var i = 0; i < w * h * 4; i += 4)
       heights.push((pixels[i] / 255) * displacementScale + displacementOffset);
 
-    // create physics collider - should be replaced with HeightfieldCollider
-    let rigidBody = world.createRigidBody(rapier.RigidBodyDesc.fixed());
-    let colliderDesc = rapier.ColliderDesc.heightfield(
-      w - 1,
-      h - 1,
-      new Float32Array(heights),
-      { x: w * 10, y: 1.0, z: h * 10 },
-    );
-    world.createCollider(colliderDesc, rigidBody);
-
-    // create mesh
-    // initially tried using displacment but shader and height field hieght values were differnt
-    // also order of heightfield and geo are slightly differnt, def a way to do this simpler
     const geo = new PlaneGeometry(w, h, w - 1, h - 1);
     const f = chunk(heights, w).reverse().flat();
     const vertices = geo.attributes.position.array;
@@ -40,16 +26,14 @@ export function Ground({ displacementScale = 5, displacementOffset = 0 }) {
   if (!geo) return null;
   return (
     <>
-      <RigidBody type="fixed" colliders={false}>
+      <RigidBody type="fixed" colliders="trimesh">
         <mesh
           position={[0, 0, 0]}
           rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
           geometry={geo}
         >
-          <meshStandardMaterial color="yelllowgreen" map={texture} />
+          <meshStandardMaterial color="yellowgreen" map={texture} />
         </mesh>
-        {/* Based on the types I think this is how the colider is suppose to work but ran into errors: */}
-        {/* <HeightfieldCollider args={[w - 1, h - 1, heights, 10]} /> */}
       </RigidBody>
     </>
   );
