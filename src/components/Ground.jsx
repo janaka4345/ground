@@ -13,20 +13,28 @@ export function Ground({ displacementScale = 5, displacementOffset = 0 }) {
   const h = texture.image.height;
 
   const geo = useMemo(() => {
-    for (var i = 0; i < w * h * 4; i += 4)
+    for (var i = 0; i < w * h * 4; i += 4) {
       heights.push((pixels[i] / 255) * displacementScale + displacementOffset);
+    }
 
     const geo = new PlaneGeometry(w, h, w - 1, h - 1);
     const f = chunk(heights, w).reverse().flat();
     const vertices = geo.attributes.position.array;
-    for (var i = 0; i < vertices.length; i++) vertices[i * 3 + 2] = f[i];
+    for (var i = 0; i < vertices.length; i++) {
+      vertices[i * 3 + 2] = f[i];
+    }
     return geo;
   }, [displacementOffset, displacementScale, texture]);
 
   if (!geo) return null;
   return (
     <>
-      <RigidBody type="fixed" colliders="trimesh">
+      <RigidBody
+        type="fixed"
+        colliders="trimesh"
+        restitution={0.5}
+        friction={1}
+      >
         <mesh
           position={[0, 0, 0]}
           rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
@@ -42,8 +50,11 @@ export function Ground({ displacementScale = 5, displacementOffset = 0 }) {
 // used to correct differing ordering between collider and mesh
 function chunk(arr, size) {
   return arr.reduce(
-    (acc, e, i) => (
-      i % size ? acc[acc.length - 1].push(e) : acc.push([e]), acc
+    (accumulator, currentValue, i) => (
+      i % size
+        ? accumulator[accumulator.length - 1].push(currentValue)
+        : accumulator.push([currentValue]),
+      accumulator
     ),
     [],
   );
