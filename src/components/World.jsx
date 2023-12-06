@@ -4,6 +4,7 @@ import { Physics } from "@react-three/rapier";
 import { Ground } from "./Ground";
 import Ball from "./Ball";
 import Plane from "./Plane";
+import Plane2 from "./Plane2";
 
 export default function World() {
   return (
@@ -16,7 +17,8 @@ export default function World() {
         <Lights />
         <Ball />
         {/* <Ground /> */}
-        <Plane />
+        {/* <Plane /> */}
+        <Plane2 />
       </Physics>
     </>
   );
