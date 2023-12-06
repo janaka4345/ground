@@ -4,7 +4,7 @@ export default function Ball(params) {
   return (
     <RigidBody
       colliders="ball"
-      position={[5, 5, 0]}
+      position={[0, 5, 0]}
       restitution={0.5}
       friction={1}
     >
