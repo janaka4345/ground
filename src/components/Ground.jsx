@@ -8,6 +8,7 @@ export function Ground({ displacementScale = 5, displacementOffset = 0 }) {
   const texture = useTexture("./Heightmap.png");
 
   var pixels = getPixels(texture.image);
+  console.log(pixels);
   const heights = [];
   const w = texture.image.width;
   const h = texture.image.height;

@@ -17,8 +17,8 @@ export default function World() {
         <Lights />
         <Ball />
         {/* <Ground /> */}
-        {/* <Plane /> */}
-        <Plane2 />
+        <Plane />
+        {/* <Plane2 /> */}
       </Physics>
     </>
   );
