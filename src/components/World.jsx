@@ -5,6 +5,7 @@ import { Ground } from "./Ground";
 import Ball from "./Ball";
 import Plane from "./Plane";
 import Plane2 from "./Plane2";
+import { AllCollidersExample } from "./AllCollidersExample";
 
 export default function World() {
   return (
@@ -15,6 +16,7 @@ export default function World() {
       <Environment preset="city" />
       <Physics debug>
         <Lights />
+        {/* <AllCollidersExample /> */}
         <Ball />
         {/* <Ground /> */}
         <Plane />

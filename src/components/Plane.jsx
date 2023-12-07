@@ -4,38 +4,55 @@ import { useEffect, useMemo, useRef } from "react";
 import { PlaneGeometry } from "three";
 
 export default function Plane(params) {
-  const bufferGeometryRef = useRef();
-  const bufferAttributeRef = useRef();
-  const planeRef = useRef();
   const texture = useTexture("./Heightmap.png");
-  const rapier = useRapier();
-  let heights = [];
+  const heightFieldHeight = 10;
+  const heightFieldWidth = 10;
+  const heightField = Array.from({
+    length: heightFieldHeight * heightFieldWidth,
+  }).map((_, index) => {
+    return Math.random();
+  });
+
+  const heightFieldGeometry = new PlaneGeometry(
+    heightFieldWidth,
+    heightFieldHeight,
+    heightFieldWidth - 1,
+    heightFieldHeight - 1,
+  );
+
+  heightField.forEach((v, index) => {
+    heightFieldGeometry.attributes.position.array[index * 3 + 2] = v;
+  });
+  heightFieldGeometry.scale(1, -1, 1);
+  heightFieldGeometry.rotateX(-Math.PI / 2);
+  heightFieldGeometry.rotateY(-Math.PI / 2);
+  heightFieldGeometry.computeVertexNormals();
+  // const rapier = useRapier();
+  // let heights = [];
   // const verteces = planeRef.currrent.attributes.array;
 
   // console.log(verteces);
 
-  const positions = useMemo(() => {
-    const geo = new PlaneGeometry(10, 10, 10, 10);
-    const vertices = geo.attributes.position.array;
-    for (var j = 0; j < vertices.length; j++) {
-      const height = Math.random() * 2;
-      heights.push(height);
-      vertices[j * 3 + 2] = height;
-    }
-    return geo;
-  }, []);
+  // const positions = useMemo(() => {
+  //   const geo = new PlaneGeometry(10, 10, 9, 9);
+  //   const vertices = geo.attributes.position.array;
+  //   for (var j = 0; j < vertices.length / 3; j++) {
+  //     const height = Math.random() * 2;
+  //     heights.push(height);
+  //     geo.attributes.position.array[j * 3 + 2] = height;
+  //   }
+  //   return geo;
+  // }, []);
   useEffect(() => {
     // console.log(texture);
     // console.log(positions);
-    console.log(rapier);
-
+    // console.log(heights);
     // for (let i = 0; i < 363 / 3; i++) {
     //   position[i * 3 + 0] = planeRef.current.attributes.position.array[i * 3];
     //   position[i * 3 + 1] = (Math.random() - 0.5) * 5;
     //   position[i * 3 + 2] =
     //     planeRef.current.attributes.position.array[i * 3 + 2];
     // }
-
     // console.log("bg", bufferGeometryRef.current);
     // console.log("ba", bufferAttributeRef.current);
     // console.log("pl", planeRef.current);
@@ -47,12 +64,19 @@ export default function Plane(params) {
     <RigidBody type="fixed" colliders={false}>
       <mesh
         position={[0, 0, 0]}
-        rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
-        geometry={positions}
+        // rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
+        geometry={heightFieldGeometry}
       >
-        <meshStandardMaterial color="yellowgreen" map={texture} />
+        <meshStandardMaterial color="yellowgreen" map={texture} side={2} />
       </mesh>
-      <HeightfieldCollider args={[10, 10, 10, 2]} />
+      <HeightfieldCollider
+        args={[
+          heightFieldWidth - 1,
+          heightFieldHeight - 1,
+          heightField,
+          { x: heightFieldWidth, y: 1, z: heightFieldHeight },
+        ]}
+      />
     </RigidBody>
   );
 }
