@@ -5,28 +5,32 @@ import { PlaneGeometry } from "three";
 
 export default function Plane(params) {
   const texture = useTexture("./Heightmap.png");
-  const heightFieldHeight = 10;
-  const heightFieldWidth = 10;
-  const heightField = Array.from({
-    length: heightFieldHeight * heightFieldWidth,
-  }).map((_, index) => {
-    return Math.random();
-  });
+  const heightFieldHeight = 250;
+  const heightFieldWidth = 250;
 
-  const heightFieldGeometry = new PlaneGeometry(
-    heightFieldWidth,
-    heightFieldHeight,
-    heightFieldWidth - 1,
-    heightFieldHeight - 1,
-  );
+  const { heightField, heightFieldGeometry } = useMemo(() => {
+    const heightField = Array.from({
+      length: heightFieldHeight * heightFieldWidth,
+    }).map((_, index) => {
+      return Math.random();
+    });
 
-  heightField.forEach((v, index) => {
-    heightFieldGeometry.attributes.position.array[index * 3 + 2] = v;
-  });
-  heightFieldGeometry.scale(1, -1, 1);
-  heightFieldGeometry.rotateX(-Math.PI / 2);
-  heightFieldGeometry.rotateY(-Math.PI / 2);
-  heightFieldGeometry.computeVertexNormals();
+    const heightFieldGeometry = new PlaneGeometry(
+      heightFieldWidth,
+      heightFieldHeight,
+      heightFieldWidth - 1,
+      heightFieldHeight - 1,
+    );
+
+    heightField.forEach((v, index) => {
+      heightFieldGeometry.attributes.position.array[index * 3 + 2] = v;
+    });
+    heightFieldGeometry.scale(1, -1, 1);
+    heightFieldGeometry.rotateX(-Math.PI / 2);
+    heightFieldGeometry.rotateY(-Math.PI / 2);
+    heightFieldGeometry.computeVertexNormals();
+    return { heightField, heightFieldGeometry };
+  }, []);
   // const rapier = useRapier();
   // let heights = [];
   // const verteces = planeRef.currrent.attributes.array;

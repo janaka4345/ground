@@ -8,10 +8,10 @@ export function Ground({ displacementScale = 5, displacementOffset = 0 }) {
   const texture = useTexture("./Heightmap.png");
 
   var pixels = getPixels(texture.image);
-  console.log(pixels);
   const heights = [];
   const w = texture.image.width;
   const h = texture.image.height;
+  console.log(w, h);
 
   const geo = useMemo(() => {
     for (var i = 0; i < w * h * 4; i += 4) {
@@ -21,7 +21,7 @@ export function Ground({ displacementScale = 5, displacementOffset = 0 }) {
     const geo = new PlaneGeometry(w, h, w - 1, h - 1);
     // const f = chunk(heights, w).reverse().flat();
     const vertices = geo.attributes.position.array;
-    for (var j = 0; j < vertices.length; j++) {
+    for (var j = 0; j < vertices.length / 3; j++) {
       vertices[j * 3 + 2] = heights[j];
     }
     return geo;
